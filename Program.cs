@@ -7,9 +7,10 @@ namespace SchedulerAppDemo
     {
         string Name;
         int year=2020,month=1,day=1,hour=0,min=0;
+        public static int numApp=0;
         void WriteData(string Name, int year, int month, int day, int hour, int min)
         {
-            FileStream fs = new FileStream(@"C:/Users/Swapnil/OneDrive/Desktop/Appointments.dat", FileMode.Append, FileAccess.Write);
+            FileStream fs = new FileStream(@"C:/Users/Swapnil/OneDrive/Desktop/Appointments.dat", FileMode.Open, FileAccess.Write);
             BinaryWriter bw = new BinaryWriter(fs);
             bw.Write(Name);
             bw.Write(year);
@@ -20,6 +21,7 @@ namespace SchedulerAppDemo
             bw.Flush();
             bw.Close();
             fs.Close();
+            numApp++;
         }
         void ReadData()
         {
@@ -28,7 +30,7 @@ namespace SchedulerAppDemo
             Console.WriteLine("leng" + fs.Length);
             try
             {
-                while (true)
+                for(int i = 0; i<numApp;i++)
                 {
                     Name = br.ReadString();
                     if (Name == null)
@@ -74,28 +76,27 @@ namespace SchedulerAppDemo
         {
             FileStream fs = new FileStream(@"C:/Users/Swapnil/OneDrive/Desktop/Appointments.dat", FileMode.Open, FileAccess.Read);
             BinaryReader br = new BinaryReader(fs);
-            //try
+            try
             {
-                while (true)
+                for (int i = 0; i < numApp; i++)
                 {
                     Name = br.ReadString();
                     if (Name == null)
                     {
                         break;
                     }
-                    if (Name != search)
-                    {
-                        continue;
-                    }
                     year = br.ReadInt32();
                     month = br.ReadInt32();
                     day = br.ReadInt32();
                     hour = br.ReadInt32();
                     min = br.ReadInt32();
-                    Console.WriteLine(Name + "\t" + day + "-" + month + "-" + year + "\t" + hour + ":" + min);
+                    if (Name == search)
+                    {
+                        Console.WriteLine(Name + "\t" + day + "-" + month + "-" + year + "\t" + hour + ":" + min);
+                    }
                 }
             }
-            //catch(EndOfStreamException)
+            catch(EndOfStreamException)
             {
 
             }
